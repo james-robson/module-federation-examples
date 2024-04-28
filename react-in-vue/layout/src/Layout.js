@@ -1,16 +1,23 @@
 import { ref } from 'vue';
 import ReactButton from './ReactButton';
+import ReadyPlayerMeCreator from './ReadyPlayerMeCreator';
 
 export default {
   name: 'Layout',
-  components: { ReactButton },
+  components: { ReactButton, ReadyPlayerMeCreator },
   setup() {
     const showButton = ref(true);
     const buttonText = ref('React button');
     const clickedCount = ref(0);
     const incrementCount = () => (clickedCount.value += 1);
+    const avatarUrl = ref();
 
-    return { showButton, buttonText, clickedCount, incrementCount };
+    const onAvatarUrlChange = (newAvatarUrl) => {
+      console.log('Received changed URL:', newAvatarUrl);
+      avatarUrl.value = newAvatarUrl;
+    }
+
+    return { avatarUrl, showButton, buttonText, clickedCount, incrementCount, onAvatarUrlChange };
   },
   template: `
     <div class="layout-app">
@@ -40,6 +47,13 @@ export default {
         <div class="remote-component">
           <react-button v-if="showButton" :text="buttonText" :onClick="incrementCount" />
         </div>
+      </div>
+      <div>
+        <h2>Ready Player Me Creator iFrame</h2>
+        <div v-if="avatarUrl">
+          <span>Viewer for {{ avatarUrl }} </span>
+        </div>
+        <ready-player-me-creator v-else @updated-url="onAvatarUrlChange" />
       </div>
     </div>
   `,

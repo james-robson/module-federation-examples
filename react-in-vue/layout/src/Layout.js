@@ -1,10 +1,11 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import ReactButton from './ReactButton';
 import ReadyPlayerMeCreator from './ReadyPlayerMeCreator';
+import ReadyPlayerMeVueViewer from './ReadyPlayerMeVueViewer';
 
 export default {
   name: 'Layout',
-  components: { ReactButton, ReadyPlayerMeCreator },
+  components: { ReactButton, ReadyPlayerMeCreator, ReadyPlayerMeVueViewer },
   setup() {
     const showButton = ref(true);
     const buttonText = ref('React button');
@@ -17,7 +18,11 @@ export default {
       avatarUrl.value = newAvatarUrl;
     }
 
-    return { avatarUrl, showButton, buttonText, clickedCount, incrementCount, onAvatarUrlChange };
+    const headerText = computed(() => {
+      return avatarUrl.value ? 'Ready Player Me Visage Viewer - loaded via Module Federation' : 'Ready Player Me Creator iFrame';
+    })
+
+    return { avatarUrl, headerText, showButton, buttonText, clickedCount, incrementCount, onAvatarUrlChange };
   },
   template: `
     <div class="layout-app">
@@ -49,10 +54,8 @@ export default {
         </div>
       </div>
       <div>
-        <h2>Ready Player Me Creator iFrame</h2>
-        <div v-if="avatarUrl">
-          <span>Viewer for {{ avatarUrl }} </span>
-        </div>
+        <h2>{{ headerText }}</h2>
+        <ready-player-me-vue-viewer v-if="avatarUrl" :model-src="avatarUrl" />
         <ready-player-me-creator v-else @updated-url="onAvatarUrlChange" />
       </div>
     </div>

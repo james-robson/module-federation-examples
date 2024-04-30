@@ -33,6 +33,7 @@ module.exports = {
       filename: 'remoteEntry.js',
       exposes: {
         './Button': './src/Button',
+        './ReadyPlayerMeViewer': './src/ReadyPlayerMeViewer',
       },
       shared: {
         ...deps,

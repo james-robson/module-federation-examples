@@ -1,16 +1,28 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import ReactButton from './ReactButton';
+import ReadyPlayerMeCreator from './ReadyPlayerMeCreator';
+import ReadyPlayerMeVueViewer from './ReadyPlayerMeVueViewer';
 
 export default {
   name: 'Layout',
-  components: { ReactButton },
+  components: { ReactButton, ReadyPlayerMeCreator, ReadyPlayerMeVueViewer },
   setup() {
     const showButton = ref(true);
     const buttonText = ref('React button');
     const clickedCount = ref(0);
     const incrementCount = () => (clickedCount.value += 1);
+    const avatarUrl = ref();
 
-    return { showButton, buttonText, clickedCount, incrementCount };
+    const onAvatarUrlChange = (newAvatarUrl) => {
+      console.log('Received changed URL:', newAvatarUrl);
+      avatarUrl.value = newAvatarUrl;
+    }
+
+    const headerText = computed(() => {
+      return avatarUrl.value ? 'Ready Player Me Visage Viewer - loaded via Module Federation' : 'Ready Player Me Creator iFrame';
+    })
+
+    return { avatarUrl, headerText, showButton, buttonText, clickedCount, incrementCount, onAvatarUrlChange };
   },
   template: `
     <div class="layout-app">
@@ -40,6 +52,11 @@ export default {
         <div class="remote-component">
           <react-button v-if="showButton" :text="buttonText" :onClick="incrementCount" />
         </div>
+      </div>
+      <div>
+        <h2>{{ headerText }}</h2>
+        <ready-player-me-vue-viewer v-if="avatarUrl" :model-src="avatarUrl" />
+        <ready-player-me-creator v-else @updated-url="onAvatarUrlChange" />
       </div>
     </div>
   `,

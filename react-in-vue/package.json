@@ -13,5 +13,8 @@
   "devDependencies": {
     "@babel/preset-react": "7.23.3",
     "wait-on": "7.2.0"
+  },
+  "dependencies": {
+    "@readyplayerme/visage": "^5.1.0"
   }
 }
